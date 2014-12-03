@@ -29,7 +29,7 @@ byte largestSpot;
 //We will have 10 counters that will be written to every 10 writes
 #define COUNTER_LOCATION_START  1
 #define COUNTER_WIDTH  4 //We use a 4-byte (4.29B) unsigned long.
-#define COUNTER_SPREAD 10 //Number of locations we spread this counter across
+#define COUNTER_SPREAD 100 //Number of locations we spread this counter across
 
 //EEPROM on the ATmega328 goes from 0 to 2048
 //We recommend you destroy a location you won't every use in upper memory like 1492 or something
@@ -44,7 +44,7 @@ void setup()
 
   pinMode(statLED, OUTPUT);
 
-  //During testing reset everything
+  //Once we've nuked a location we use this to reset all the counter locations
   //for(int x = COUNTER_LOCATION_START ; x < COUNTER_LOCATION_START + (COUNTER_WIDTH * COUNTER_SPREAD) ; x++)
   //  EEPROM.write(x, 0xFF);
     
@@ -121,7 +121,7 @@ void findLargestCount()
   largestSpot = COUNTER_LOCATION_START;
 
   //Start looking at the beginning, step 3 bytes each loop, stop after 10 slots
-  for(byte spot = COUNTER_LOCATION_START ; spot < (COUNTER_LOCATION_START + (COUNTER_WIDTH * COUNTER_SPREAD)) ; spot += COUNTER_WIDTH)
+  for(int spot = COUNTER_LOCATION_START ; spot < (COUNTER_LOCATION_START + (COUNTER_WIDTH * COUNTER_SPREAD)) ; spot += COUNTER_WIDTH)
   {
     unsigned long count = readBytes(spot, COUNTER_WIDTH);
 
